@@ -59,11 +59,10 @@
 							},
 							"src/assets",
 							"src/favicon.ico",
+							"src/404.html",
 							"CNAME"
 						],
 						"styles": ["src/styles.scss"],
-						"server": "src/main.server.ts",
-						"outputMode": "server",
 						"security": {
 							"allowedHosts": []
 						},
