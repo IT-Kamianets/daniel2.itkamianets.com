@@ -27,8 +27,8 @@ jobs:
             - name: Build Angular app
               run: npm run build
 
-            - name: Copy CNAME file
-              run: cp CNAME dist/app/browser/
+            - name: Add .nojekyll file
+              run: touch dist/app/browser/.nojekyll
 
             - name: Set up SSH
               env:

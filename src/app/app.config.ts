@@ -36,7 +36,7 @@ export const appConfig: ApplicationConfig = {
 		provideTranslate({
 			defaultLanguage: 'ua',
 			languages: availableLanguages,
-			folder: 'i18n/',
+			folder: '/i18n/',
 		}),
 		{
 			provide: APP_INITIALIZER,
