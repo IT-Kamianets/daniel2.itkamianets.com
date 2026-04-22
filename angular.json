@@ -58,7 +58,8 @@
 								"output": "i18n"
 							},
 							"src/assets",
-							"src/favicon.ico"
+							"src/favicon.ico",
+							"CNAME"
 						],
 						"styles": ["src/styles.scss"],
 						"server": "src/main.server.ts",
