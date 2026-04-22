@@ -7,7 +7,7 @@
 				<div class="no-scrollbar flex gap-4 overflow-x-auto text-[15px] font-semibold">
 					@for (group of groups(); track trackByGroup($index, group)) {
 						<button
-							class="shrink-0 border-b-2 px-0 pb-2 transition-colors duration-200"
+							class="shrink-0 cursor-pointer border-b-2 px-0 pb-2 transition-colors duration-200"
 							[class.border-[var(--c-secondary)]]="selectedGroupId() === group.id"
 							[class.text-[var(--c-secondary)]]="selectedGroupId() === group.id"
 							[class.border-transparent]="selectedGroupId() !== group.id"
@@ -25,8 +25,11 @@
 				<div class="no-scrollbar flex gap-2 overflow-x-auto">
 					@for (section of activeSections(); track trackBySection($index, section)) {
 						<a
-							class="shrink-0 rounded-[0.65rem] bg-[var(--c-bg-secondary)] px-3 py-1.5 text-[13px] font-semibold text-[var(--c-secondary)] shadow-[0_0_0_1px_var(--c-border)_inset]"
-							[href]="'#' + section.id"
+							class="subcategory-chip shrink-0 cursor-pointer rounded-[0.65rem] bg-[var(--c-bg-secondary)] px-3 py-1.5 text-[13px] font-semibold text-[var(--c-secondary)] shadow-[0_0_0_1px_var(--c-border)_inset] transition-colors duration-200"
+							[class.is-active]="selectedSectionId() === section.id"
+							[routerLink]="[]"
+							[fragment]="section.id"
+							(click)="setActiveSection(section.id)"
 						>
 							{{ section.name }}
 						</a>

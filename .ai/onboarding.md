@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This repository contains one Angular website for a HoReCa business.
+This repository contains one Angular website for a Daniel business.
 
 Typical goals:
 - present the brand clearly

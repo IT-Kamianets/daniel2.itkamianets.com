@@ -1,7 +1,8 @@
+import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@wawjs/ngx-translate';
+import { TranslateService } from '@wawjs/ngx-translate';
 import { LanguageService } from '../../feature/language/language.service';
 import { FavoritesService } from '../../feature/menu/favorites.service';
 import {
@@ -23,6 +24,7 @@ interface DishSuggestion {
 	title: string;
 	description: string | null;
 	price: string;
+	image: string;
 	imageAlt: string;
 }
 
@@ -35,6 +37,7 @@ interface DishViewModel {
 	fullDescription: string | null;
 	price: string;
 	labels: string[];
+	image: string;
 	imageAlt: string;
 	facts: DishFact[];
 	suggestions: DishSuggestion[];
@@ -43,12 +46,13 @@ interface DishViewModel {
 const _fallbackEntry = _resolveFallbackEntry();
 
 @Component({
-	imports: [RouterLink, TranslatePipe],
+	imports: [RouterLink],
 	templateUrl: './dish.component.html',
 	styleUrl: './dish.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DishComponent {
+	private readonly _location = inject(Location);
 	private readonly _route = inject(ActivatedRoute);
 	private readonly _favoritesService = inject(FavoritesService);
 	private readonly _languageService = inject(LanguageService);
@@ -72,9 +76,23 @@ export class DishComponent {
 			this.isFavorite() ? 'Remove from favorites' : 'Add to favorites',
 		)(),
 	);
+	protected readonly browseFullMenuLabel = computed(() =>
+		this._translateService.translate('Browse full menu')(),
+	);
+	protected readonly backLabel = computed(() => this._translateService.translate('Back')());
+	protected readonly aboutDishLabel = computed(() => this._translateService.translate('About dish')());
+	protected readonly dishDetailsLabel = computed(() => this._translateService.translate('Dish details')());
+	protected readonly pairsWellWithLabel = computed(() =>
+		this._translateService.translate('Pairs well with')(),
+	);
+	protected readonly chefPicksLabel = computed(() => this._translateService.translate('Chef picks')());
 
 	protected toggleFavorite() {
 		this._favoritesService.toggleFavorite(this.dish().id);
+	}
+
+	protected goBack() {
+		this._location.back();
 	}
 }
 
@@ -95,6 +113,7 @@ function _buildDishViewModel(
 		labels: item.labels
 			.map((label) => cleanText(translateMenuValue(label, language)))
 			.filter((label): label is string => Boolean(label)),
+		image: item.image,
 		imageAlt: translateMenuValue(item.title, language) ?? item.slug,
 		facts: _buildFacts(section, item, language, translateService),
 		suggestions: _buildSuggestions(section, item, language, translateService),
@@ -163,6 +182,7 @@ function _buildSuggestions(
 			title: translateMenuValue(item.title, language) ?? item.slug,
 			description: cleanText(translateMenuValue(item.description, language)),
 			price: _formatPrice(item.price, translateService),
+			image: item.image,
 			imageAlt: translateMenuValue(item.title, language) ?? item.slug,
 		}));
 }
@@ -172,7 +192,7 @@ function _formatPrice(price: number | null, translateService: TranslateService) 
 		return translateService.translate('Ask for price')();
 	}
 
-	return `${price} €`;
+	return `${price} ₴`;
 }
 
 function _resolveFallbackEntry() {

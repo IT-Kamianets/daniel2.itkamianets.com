@@ -20,6 +20,21 @@
 	transform: scale(1.02);
 }
 
+.browse-full-menu-btn {
+	background: var(--c-secondary-hover);
+	color: #fff;
+}
+
+
+:host-context(html[data-mode='dark']) .browse-full-menu-btn {
+	background: #4a372a;
+	color: var(--c-text-secondary);
+}
+
+:host-context(html[data-mode='dark']) .browse-full-menu-btn:hover {
+	background: #5a4333;
+}
+
 .line-clamp-2,
 .line-clamp-3 {
 	display: -webkit-box;

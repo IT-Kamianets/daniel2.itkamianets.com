@@ -20,7 +20,7 @@
 				>
 					<button
 						class="gallery-trigger block w-full cursor-zoom-in"
-						[attr.aria-label]="'Open photo in full screen: ' + photo.alt"
+						[attr.aria-label]="('Open photo in full screen: ' | translate) + photo.alt"
 						(click)="openPhoto(photo)"
 						type="button"
 					>

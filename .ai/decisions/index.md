@@ -9,5 +9,5 @@ Use this file as the entry point for durable team decisions.
 - [2026-04-01 Page-Local Content And Data Policy](./2026-04-01-page-local-content-and-data-policy.md)
 - [2026-04-01 Modern Angular Component Defaults](./2026-04-01-modern-angular-component-defaults.md)
 - [2026-04-07 Layout Navigation](./2026-04-07-layout-navigation-surfaces.md)
-- [2026-04-07 HoReCa Page Scope](./2026-04-07-horeca-page-scope.md)
+- [2026-04-07 Daniel Page Scope](./2026-04-07-Daniel-page-scope.md)
 - [2026-04-07 Mobile Sticky Footer Navigation](./2026-04-07-mobile-sticky-footer-navigation.md)

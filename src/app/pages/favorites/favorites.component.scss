@@ -12,6 +12,20 @@
 	display: none;
 }
 
+button[type='button'] {
+	cursor: pointer;
+}
+
+.subcategory-chip.is-active {
+	background: color-mix(in srgb, var(--c-secondary) 10%, var(--c-bg-secondary));
+	color: var(--c-secondary);
+	box-shadow: 0 0 0 1px color-mix(in srgb, var(--c-secondary) 30%, var(--c-border)) inset;
+}
+
+.subcategory-chip:hover:not(.is-active) {
+	background: color-mix(in srgb, var(--c-text-primary) 5%, var(--c-bg-secondary));
+}
+
 .line-clamp-2,
 .line-clamp-3 {
 	display: -webkit-box;

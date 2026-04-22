@@ -1,55 +1,31 @@
-import categoriesData from '../../../data/categories.json';
-import categoryTranslationsData from '../../../data/categories.translations.json';
-import groupData from '../../../data/group.json';
-import itemsData from '../../../data/items.json';
-import itemTranslationsData from '../../../data/items.translations.json';
+import categoriesTranslations from '../../../data/categories.translations.json';
+import itemsTranslations from '../../../data/items.translations.json';
+import menuData from '../../../data/menu.json';
 import type { LanguageCode } from '../language/language.type';
 
-export type LocalizedValue = Partial<Record<LanguageCode, string | null>>;
+export type LocalizedValue = Partial<Record<LanguageCode | 'uk', string | null>>;
 
-interface RawCategory {
-	name: string;
-	description: string;
-	section: string;
-	slug: string;
+interface RawMenuFile {
+	categories: RawMenuCategory[];
 }
 
-interface RawCategoryTranslation {
-	slug: string;
-	data: {
-		name: LocalizedValue;
-		description: LocalizedValue;
-	};
+interface RawMenuCategory {
+	name: LocalizedValue;
+	subcategories?: RawMenuSubcategory[];
+	products?: RawProduct[];
 }
 
-interface RawItemRecord {
+interface RawMenuSubcategory {
+	name: LocalizedValue;
+	products: RawProduct[];
+}
+
+interface RawProduct {
 	slug: string;
-	categorySlug: string;
-	title: string;
+	title: LocalizedValue;
 	price: number | null;
-	description: string;
-	labels: string[];
-	fullDescription: string;
-	suggested: string[];
-	cookTimeMinutes: number | null;
-	caloriesKcal: number | null;
-	portion: string | null;
-	allergens: string[];
-}
-
-interface RawItemTranslation {
-	slug: string;
-	data: {
-		title: LocalizedValue;
-		description: LocalizedValue;
-		labels: LocalizedValue[];
-		fullDescription?: LocalizedValue;
-	};
-}
-
-interface RawGroupDefinition {
-	id: string;
-	names: LocalizedValue;
+	description: LocalizedValue;
+	image?: string;
 }
 
 export interface RawMenuItem {
@@ -100,31 +76,179 @@ export interface MenuGroup {
 	sections: MenuSection[];
 }
 
-const _categories = categoriesData as RawCategory[];
-const _categoryTranslations = new Map(
-	(categoryTranslationsData as RawCategoryTranslation[]).map(
-		(category) => [category.slug, category.data] as const,
-	),
-);
-const _itemTranslations = new Map(
-	(itemTranslationsData as RawItemTranslation[]).map((item) => [item.slug, item.data] as const),
-);
-const _itemsByCategorySlug = new Map<string, RawItemRecord[]>();
+const _menu = menuData as RawMenuFile;
+const _categories = Array.isArray(_menu?.categories) ? _menu.categories : [];
 
-for (const item of itemsData as RawItemRecord[]) {
-	const categoryItems = _itemsByCategorySlug.get(item.categorySlug);
+const _menuSections = _categories.flatMap((category) => {
+	const groupId = createId(_translateValue(category.name, 'ua') ?? _translateValue(category.name, 'en') ?? 'menu');
+	const categoryLookupSlug = createId(_translateValue(category.name, 'en') ?? groupId);
+	
+	const categoryName = _enrichLocalizedValue(category.name, categoryLookupSlug, categoriesTranslations);
 
-	if (categoryItems) {
-		categoryItems.push(item);
-		continue;
+	if (Array.isArray(category.products) && category.products.length > 0) {
+		const sectionId = `${groupId}-main`;
+		const items = _mapProductsToRawItems(category.products);
+		
+		return [{
+			slug: sectionId,
+			section: groupId,
+			name: categoryName,
+			description: { ua: null, en: null },
+			items,
+		} as RawMenuSection];
 	}
 
-	_itemsByCategorySlug.set(item.categorySlug, [item]);
+	const subcategories = Array.isArray(category.subcategories) ? category.subcategories : [];
+
+	return subcategories.map((subcategory) => {
+		const subcategoryLookupSlug = createId(
+			_translateValue(subcategory.name, 'en') ??
+				_translateValue(subcategory.name, 'ua') ??
+				'section',
+		);
+		const sectionSlug = createId(
+			_translateValue(subcategory.name, 'ua') ?? _translateValue(subcategory.name, 'en') ?? 'section',
+		);
+		const sectionId = `${groupId}-${sectionSlug}`;
+		const products = Array.isArray(subcategory.products) ? subcategory.products : [];
+		const items = _mapProductsToRawItems(products);
+		
+		const subcategoryName = _enrichLocalizedValue(
+			subcategory.name,
+			subcategoryLookupSlug,
+			categoriesTranslations,
+		);
+
+		return {
+			slug: sectionId,
+			section: groupId,
+			name: subcategoryName,
+			description: { ua: null, en: null },
+			items,
+		} as RawMenuSection;
+	});
+});
+
+function _mapProductsToRawItems(products: RawProduct[]): RawMenuItem[] {
+	return products.map((product) => {
+		const externalTranslation = _findTranslation(itemsTranslations, product.slug, product.title, 'title');
+		const title = _enrichLocalizedValue(product.title, product.slug, itemsTranslations, 'title');
+		const desc = _enrichLocalizedValue(
+			product.description,
+			product.slug,
+			itemsTranslations,
+			'description',
+			product.title,
+		);
+		
+		const uaDescription = cleanText(desc['uk'] ?? desc['ua'] ?? null);
+		const enDescription = cleanText(desc['en'] ?? uaDescription);
+
+		return {
+			slug: product.slug,
+			title,
+			price: product.price,
+			description: desc,
+			labels: externalTranslation?.data?.labels ?? [],
+			image: _normalizeImage(product.image),
+			fullDescription: externalTranslation?.data?.fullDescription ?? desc,
+			suggested: [],
+			cookTimeMinutes: null,
+			caloriesKcal: null,
+			portion: null,
+			allergens: [],
+		} as RawMenuItem;
+	});
 }
 
-const _menuSections = _categories.map((category) => _toRawMenuSection(category));
+const _groupDefinitions = _categories.map((category) => {
+	const groupId = createId(_translateValue(category.name, 'ua') ?? _translateValue(category.name, 'en') ?? 'menu');
+	return {
+		id: groupId,
+		names: _enrichLocalizedValue(category.name, groupId, categoriesTranslations),
+	};
+});
 
-const _groupDefinitions = groupData as RawGroupDefinition[];
+function _enrichLocalizedValue(
+	original: LocalizedValue,
+	slug: string,
+	translations: any[],
+	field: string = 'name',
+	lookupValue?: LocalizedValue,
+): LocalizedValue {
+	const translation = _findTranslation(translations, slug, lookupValue ?? original, field);
+	const enriched = { ...original };
+	
+	if (translation?.data?.[field]) {
+		const translatedData = translation.data[field];
+		for (const [lang, val] of Object.entries(translatedData)) {
+			if (val) {
+				enriched[lang as LanguageCode] = val as string;
+			}
+		}
+	}
+	
+	return enriched;
+}
+
+function _findTranslation(
+	translations: any[],
+	slug: string,
+	lookupValue?: LocalizedValue,
+	field: string = 'name',
+) {
+	const normalizedTarget = _normalizeTranslationSlug(slug);
+	const expectedValue = _normalizeText(
+		_translateValue(lookupValue, 'en') ??
+			_translateValue(lookupValue, 'ua') ??
+			lookupValue?.uk ??
+			'',
+	);
+
+	const slugMatch = translations.find((entry) => {
+		const entrySlug = typeof entry?.slug === 'string' ? entry.slug : '';
+
+		if (!entrySlug) {
+			return false;
+		}
+
+		if (entrySlug === slug) {
+			return true;
+		}
+
+		return _normalizeTranslationSlug(entrySlug) === normalizedTarget;
+	});
+
+	if (slugMatch) {
+		return slugMatch;
+	}
+
+	if (!expectedValue) {
+		return undefined;
+	}
+
+	return translations.find((entry) => {
+		const candidateValue = _normalizeText(entry?.data?.[field]?.en ?? '');
+		return candidateValue !== '' && candidateValue === expectedValue;
+	});
+}
+
+function _normalizeTranslationSlug(value: string) {
+	return value
+		.toLowerCase()
+		.normalize('NFKD')
+		.replace(/[\u0300-\u036f]/g, '')
+		.replace(/[^a-z0-9]+/g, '-');
+}
+
+function _normalizeText(value: string) {
+	return value
+		.toLowerCase()
+		.normalize('NFKD')
+		.replace(/[\u0300-\u036f]/g, '')
+		.replace(/[^a-z0-9]+/g, ' ')
+		.trim();
+}
 
 export const rawMenuSections = _menuSections;
 export const dishSlugs = _menuSections.flatMap((section) => section.items.map((item) => item.slug));
@@ -133,8 +257,7 @@ export const menuSections = buildMenuSections('ua');
 
 export const menuGroups = buildMenuGroups('ua');
 
-export const navigationSection =
-	menuSections.find((section) => section.id === 'burgers') ?? menuSections[0];
+export const navigationSection = menuSections[0];
 
 export function buildMenuSections(language: LanguageCode) {
 	return _menuSections.map((section) => _toMenuSection(section, language));
@@ -162,74 +285,10 @@ export function findRawMenuItemBySlug(slug: string) {
 	return null;
 }
 
-function _toRawMenuSection(category: RawCategory): RawMenuSection {
-	const categoryTranslations = _categoryTranslations.get(category.slug);
-	const items = (_itemsByCategorySlug.get(category.slug) ?? []).map((item) =>
-		_toRawMenuItem(item),
-	);
-
-	return {
-		slug: category.slug,
-		section: category.section,
-		name: {
-			ua: categoryTranslations?.name.ua ?? category.name,
-			en: categoryTranslations?.name.en ?? category.name,
-			...categoryTranslations?.name,
-		},
-		description: {
-			ua: categoryTranslations?.description.ua ?? category.description,
-			en: categoryTranslations?.description.en ?? category.description,
-			...categoryTranslations?.description,
-		},
-		items,
-	};
-}
-
-function _toRawMenuItem(item: RawItemRecord): RawMenuItem {
-	const itemTranslations = _itemTranslations.get(item.slug);
-
-	return {
-		slug: item.slug,
-		title: {
-			ua: itemTranslations?.title.ua ?? item.title,
-			en: itemTranslations?.title.en ?? item.title,
-			...itemTranslations?.title,
-		},
-		price: item.price,
-		description: {
-			ua: itemTranslations?.description.ua ?? item.description,
-			en: itemTranslations?.description.en ?? item.description,
-			...itemTranslations?.description,
-		},
-		labels: item.labels.map((label, index) => {
-			const translatedLabel = itemTranslations?.labels[index];
-
-			return {
-				ua: translatedLabel?.ua ?? label,
-				en: translatedLabel?.en ?? label,
-				...translatedLabel,
-			};
-		}),
-		image: `/item/${item.slug}.webp`,
-		fullDescription: {
-			ua: itemTranslations?.fullDescription?.ua ?? item.fullDescription,
-			en: itemTranslations?.fullDescription?.en ?? item.fullDescription,
-			...itemTranslations?.fullDescription,
-		},
-		suggested: item.suggested,
-		cookTimeMinutes: item.cookTimeMinutes,
-		caloriesKcal: item.caloriesKcal,
-		portion: item.portion,
-		allergens: item.allergens,
-	};
-}
-
 function _toMenuSection(section: RawMenuSection, language: LanguageCode): MenuSection {
-	const sectionName = _translateValue(section.name, language) ?? '';
-
 	return {
 		id: section.slug,
-		name: sectionName,
+		name: _translateValue(section.name, language) ?? section.slug,
 		description: cleanText(_translateValue(section.description, language)),
 		items: section.items.map((item) => ({
 			id: `${section.slug}-${item.slug}`,
@@ -256,25 +315,59 @@ function _translateValue(value: LocalizedValue | null | undefined, language: Lan
 		return null;
 	}
 
-	const localized = value[language];
-
-	if (localized) {
-		return localized;
+	const requestedValue = value[language];
+	if (typeof requestedValue === 'string' && requestedValue.trim() !== '') {
+		return requestedValue;
 	}
 
-	const english = value.en;
-
-	if (english) {
-		return english;
+	if (language === 'ua') {
+		const ukValue = value['uk'];
+		if (typeof ukValue === 'string' && ukValue.trim() !== '') {
+			return ukValue;
+		}
 	}
 
-	const ukrainian = value.ua;
-
-	if (ukrainian) {
-		return ukrainian;
+	const enValue = value['en'];
+	if (typeof enValue === 'string' && enValue.trim() !== '') {
+		return enValue;
 	}
 
-	return Object.values(value).find((entry): entry is string => Boolean(entry)) ?? null;
+	const uaValue = value['ua'];
+	if (typeof uaValue === 'string' && uaValue.trim() !== '') {
+		return uaValue;
+	}
+
+	const ukValueAlt = value['uk'];
+	if (typeof ukValueAlt === 'string' && ukValueAlt.trim() !== '') {
+		return ukValueAlt;
+	}
+
+	return Object.values(value).find((entry): entry is string => typeof entry === 'string' && entry.trim() !== '') ?? null;
+}
+
+function _normalizeImage(image: string | undefined) {
+	if (!image) {
+		return '/images/logo/logo.png';
+	}
+
+	if (image.startsWith('http://') || image.startsWith('https://')) {
+		return image;
+	}
+
+	if (image.startsWith('/images/')) {
+		return image;
+	}
+
+	if (image.startsWith('images/')) {
+		return `/${image}`;
+	}
+	
+	if (image.includes('cdn-media.choiceqr.com')) {
+		return image.startsWith('//') ? `https:${image}` : image;
+	}
+
+	// Default to product folder if only filename or relative path
+	return `/images/product/${image.split('/').pop()}`;
 }
 
 export function translateMenuValue(
@@ -284,7 +377,7 @@ export function translateMenuValue(
 	return _translateValue(value, language);
 }
 
-export function cleanText(value: string | null) {
+export function cleanText(value: string | null | undefined) {
 	if (!value) {
 		return null;
 	}

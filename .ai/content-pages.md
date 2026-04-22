@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This repo is for HoReCa business pages. Content should support real visitor needs quickly.
+This repo is for Daniel business pages. Content should support real visitor needs quickly.
 
 ## Typical Pages
 
@@ -61,7 +61,7 @@ If such pages exist, they should answer:
 
 ## CTA Principles
 
-Strong CTA examples for HoReCa:
+Strong CTA examples for Daniel:
 - reserve a table
 - view menu
 - call now

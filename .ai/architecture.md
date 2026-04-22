@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository contains one Angular 21 HoReCa website with a few simple pages.
+This repository contains one Angular 21 Daniel website with a few simple pages.
 
 The architecture should stay lightweight and fit prerendered marketing pages. Treat `AGENTS.md` as the source of truth for repo-wide defaults and use this guide for structure choices.
 

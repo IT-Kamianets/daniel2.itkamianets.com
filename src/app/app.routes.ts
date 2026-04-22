@@ -7,10 +7,6 @@ export const routes: Routes = [
 			import('./pages/landing/landing.component').then((m) => m.LandingComponent),
 	},
 	{
-		path: 'rooms',
-		loadComponent: () => import('./pages/rooms/rooms.component').then((m) => m.RoomsComponent),
-	},
-	{
 		path: 'navigation',
 		loadComponent: () =>
 			import('./pages/navigation/navigation.component').then((m) => m.NavigationComponent),
@@ -27,11 +23,6 @@ export const routes: Routes = [
 	{
 		path: 'sales',
 		loadComponent: () => import('./pages/sales/sales.component').then((m) => m.SalesComponent),
-	},
-	{
-		path: 'articles',
-		loadComponent: () =>
-			import('./pages/articles/articles.component').then((m) => m.ArticlesComponent),
 	},
 	{
 		path: 'reviews',

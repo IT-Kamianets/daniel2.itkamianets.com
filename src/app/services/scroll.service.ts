@@ -12,6 +12,8 @@ export class ScrollService {
 	private _landingPosition: [number, number] | null = null;
 	private _initialized = false;
 
+	private _currentPath = '';
+
 	initialize() {
 		if (!this._isBrowser || this._initialized) {
 			return;
@@ -23,6 +25,8 @@ export class ScrollService {
 			window.history.scrollRestoration = 'manual';
 		}
 
+		this._currentPath = this._router.url.split(/[?#]/)[0];
+
 		this._router.events.subscribe((event) => {
 			if (event instanceof NavigationStart) {
 				this._saveLandingPosition();
@@ -30,7 +34,11 @@ export class ScrollService {
 			}
 
 			if (event instanceof NavigationEnd) {
-				this._applyPosition(event.urlAfterRedirects);
+				const newPath = event.urlAfterRedirects.split(/[?#]/)[0];
+				if (newPath !== this._currentPath) {
+					this._applyPosition(event.urlAfterRedirects);
+					this._currentPath = newPath;
+				}
 			}
 		});
 	}

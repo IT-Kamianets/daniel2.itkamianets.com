@@ -1,4 +1,15 @@
 <main class="mx-auto max-w-[var(--container)] px-2 pb-8 pt-2 sm:px-4 sm:pb-10">
+	<div class="mb-4 flex items-center justify-between px-1">
+		<button
+			(click)="goBack()"
+			class="inline-flex cursor-pointer items-center gap-2 text-sm font-semibold text-[var(--c-text-secondary)] transition-colors hover:text-[var(--c-secondary)]"
+			type="button"
+		>
+			<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+			{{ backLabel() }}
+		</button>
+	</div>
+
 	<section class="hero-shell overflow-hidden rounded-[1.5rem] border border-[var(--c-border)]">
 		<div
 			class="grid gap-6 bg-[var(--c-bg-secondary)] p-4 sm:p-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)] lg:items-center"
@@ -46,17 +57,25 @@
 
 				<div class="flex flex-wrap gap-3 pt-1">
 					<a
-						class="inline-flex items-center justify-center rounded-full bg-[var(--c-secondary)] px-5 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[var(--c-secondary-hover)]"
+						class="browse-full-menu-btn inline-flex cursor-pointer items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition-colors duration-200 hover:opacity-90"
 						routerLink="/"
 					>
-						{{ 'Browse full menu' | translate }}
+						{{ browseFullMenuLabel() }}
 					</a>
 					<button
-						class="inline-flex items-center justify-center rounded-full border border-[var(--c-border)] bg-[var(--c-bg-primary)] px-5 py-3 text-sm font-semibold text-[var(--c-text-secondary)] transition-colors duration-200 hover:bg-[var(--c-bg-tertiary)]"
+						class="inline-flex cursor-pointer items-center justify-center gap-2 rounded-full border border-[var(--c-border)] bg-[var(--c-bg-primary)] px-5 py-3 text-sm font-semibold text-[var(--c-text-secondary)] transition-colors duration-200 hover:bg-[var(--c-bg-tertiary)]"
 						[attr.aria-label]="favoriteLabel()"
 						(click)="toggleFavorite()"
 						type="button"
 					>
+						<span
+							class="material-symbols-outlined text-[20px]"
+							[class.!text-[var(--c-secondary)]]="isFavorite()"
+							[class.variation-fill]="isFavorite()"
+							aria-hidden="true"
+						>
+							favorite
+						</span>
 						{{ favoriteLabel() }}
 					</button>
 				</div>
@@ -66,7 +85,7 @@
 				<div class="hero-glow absolute inset-0 rounded-[1.4rem]"></div>
 				<img
 					class="relative z-[1] h-[20rem] w-full rounded-[1.4rem] object-cover shadow-[var(--shadow-md)] sm:h-[26rem]"
-					[src]="'/item/' + dish().slug + '.webp'"
+					[src]="dish().image"
 					[attr.alt]="dish().imageAlt"
 				/>
 			</div>
@@ -86,7 +105,7 @@
 						<p
 							class="text-[12px] font-semibold uppercase tracking-[0.18em] text-[var(--c-secondary)]"
 						>
-							{{ 'About dish' | translate }}
+							{{ aboutDishLabel() }}
 						</p>
 						<div
 							class="h-px flex-1 border-t border-dashed border-[var(--c-border)]"
@@ -104,7 +123,7 @@
 			>
 				<div class="flex items-center justify-between gap-3">
 					<h2 class="text-xl font-semibold text-[var(--c-text-secondary)]">
-						{{ 'Dish details' | translate }}
+						{{ dishDetailsLabel() }}
 					</h2>
 				</div>
 
@@ -130,10 +149,10 @@
 		>
 			<div class="flex items-center justify-between gap-3">
 				<h2 class="text-xl font-semibold text-[var(--c-text-secondary)]">
-					{{ 'Pairs well with' | translate }}
+					{{ pairsWellWithLabel() }}
 				</h2>
 				<span class="text-xs uppercase tracking-[0.16em] text-[var(--c-text-muted)]">
-					{{ 'Chef picks' | translate }}
+					{{ chefPicksLabel() }}
 				</span>
 			</div>
 
@@ -146,7 +165,7 @@
 						<div class="flex gap-3">
 							<img
 								class="h-20 w-20 shrink-0 rounded-[0.9rem] object-cover"
-								[src]="'/item/' + suggestion.slug + '.webp'"
+								[src]="suggestion.image"
 								[attr.alt]="suggestion.imageAlt"
 								loading="lazy"
 							/>

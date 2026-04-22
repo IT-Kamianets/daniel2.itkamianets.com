@@ -16,7 +16,8 @@ export class LandingComponent {
 	private readonly _viewportScroller = inject(ViewportScroller);
 
 	protected readonly groups = computed(() => buildMenuGroups(this._languageService.language()));
-	protected readonly selectedGroupId = signal('appetizers');
+	protected readonly selectedGroupId = signal('');
+	protected readonly selectedSectionId = signal('');
 	protected readonly activeGroup = computed(
 		() => this.groups().find((group) => group.id === this.selectedGroupId()) ?? this.groups()[0],
 	);
@@ -28,7 +29,14 @@ export class LandingComponent {
 		}
 
 		this.selectedGroupId.set(groupId);
+		this.selectedSectionId.set(
+			this.groups().find((group) => group.id === groupId)?.sections[0]?.id ?? '',
+		);
 		this._viewportScroller.scrollToPosition([0, 0]);
+	}
+
+	protected setActiveSection(sectionId: string) {
+		this.selectedSectionId.set(sectionId);
 	}
 
 	protected trackByGroup(_: number, group: MenuGroup) {

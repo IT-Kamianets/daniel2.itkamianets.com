@@ -11,7 +11,7 @@
 
 ## Context
 
-This repository is a mobile-first HoReCa marketing site. Navigation needs to stay fast, obvious, and space-efficient across breakpoints. A reusable layout decision needs to define the whole navigation system, not just one component in isolation.
+This repository is a mobile-first Daniel marketing site. Navigation needs to stay fast, obvious, and space-efficient across breakpoints. A reusable layout decision needs to define the whole navigation system, not just one component in isolation.
 
 ## Decision
 

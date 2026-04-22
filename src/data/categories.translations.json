@@ -59,7 +59,6 @@
 			}
 		}
 	},
-
 	{
 		"slug": "coffee",
 		"document": "itemCategory",
@@ -96,7 +95,7 @@
 				"bg": "Топли и студени кафе напитки.",
 				"hr": "Topli i hladni napitci od kave.",
 				"cs": "Teplé i studené kávové nápoje.",
-				"da": "Varme og kolde kaffedrikke.",
+				"da": "Varme og kolде kaffedrikke.",
 				"nl": "Warme en koude koffiedranken.",
 				"en": "Hot and cold coffee drinks.",
 				"et": "Kuumad ja külmad kohvijoogid.",
@@ -117,6 +116,255 @@
 				"sl": "Topli in hladni kavni napitki.",
 				"es": "Bebidas de café frías y calientes.",
 				"sv": "Varma och kalla kaffedrycker."
+			}
+		}
+	},
+	{
+		"slug": "pizza",
+		"document": "itemCategory",
+		"data": {
+			"name": {
+				"ua": "Піца",
+				"en": "Pizza",
+				"pl": "Pizza",
+				"de": "Pizza",
+				"fr": "Pizza",
+				"it": "Pizza",
+				"es": "Pizza"
+			}
+		}
+	},
+	{
+		"slug": "sushi",
+		"document": "itemCategory",
+		"data": {
+			"name": {
+				"ua": "Суші",
+				"en": "Sushi",
+				"pl": "Sushi",
+				"de": "Sushi",
+				"fr": "Sushi"
+			}
+		}
+	},
+	{
+		"slug": "kitchen",
+		"document": "itemCategory",
+		"data": {
+			"name": {
+				"ua": "Кухня",
+				"en": "Kitchen",
+				"pl": "Kuchnia",
+				"de": "Küche",
+				"fr": "Cuisine"
+			}
+		}
+	},
+	{
+		"slug": "desserts",
+		"document": "itemCategory",
+		"data": {
+			"name": {
+				"ua": "Десерти",
+				"en": "Desserts",
+				"pl": "Desery",
+				"de": "Nachspeisen",
+				"fr": "Desserts"
+			}
+		}
+	},
+	{
+		"slug": "alcohol",
+		"document": "itemCategory",
+		"data": {
+			"name": {
+				"ua": "Алкоголь",
+				"en": "Alcohol",
+				"pl": "Alkohol",
+				"de": "Alkohol",
+				"fr": "Alcool"
+			}
+		}
+	},
+	{
+		"slug": "classic",
+		"document": "itemCategory",
+		"data": {
+			"name": {
+				"ua": "Класичні",
+				"en": "Classic",
+				"pl": "Klasyczne",
+				"de": "Klassisch",
+				"fr": "Classique"
+			}
+		}
+	},
+	{
+		"slug": "meat",
+		"document": "itemCategory",
+		"data": {
+			"name": {
+				"ua": "М'ясні",
+				"en": "Meat",
+				"pl": "Mięsne",
+				"de": "Fleisch",
+				"fr": "Viande"
+			}
+		}
+	},
+	{
+		"slug": "fish-seafood",
+		"document": "itemCategory",
+		"data": {
+			"name": {
+				"ua": "Рибні",
+				"en": "Fish/Seafood",
+				"pl": "Rybne/Owoce morza",
+				"de": "Fisch/Meeresfrüchte",
+				"fr": "Poisson/Fruits de mer"
+			}
+		}
+	},
+	{
+		"slug": "cheese",
+		"document": "itemCategory",
+		"data": {
+			"name": {
+				"ua": "Сирні",
+				"en": "Cheese",
+				"pl": "Serowe",
+				"de": "Käse",
+				"fr": "Fromage"
+			}
+		}
+	},
+	{
+		"slug": "salads",
+		"document": "itemCategory",
+		"data": {
+			"name": {
+				"ua": "Салати",
+				"en": "Salads",
+				"pl": "Sałatki",
+				"de": "Salate",
+				"fr": "Salades"
+			}
+		}
+	},
+	{
+		"slug": "soups",
+		"document": "itemCategory",
+		"data": {
+			"name": {
+				"ua": "Супи",
+				"en": "Soups",
+				"pl": "Zupy",
+				"de": "Suppen",
+				"fr": "Soupes"
+			}
+		}
+	},
+	{
+		"slug": "pasta",
+		"document": "itemCategory",
+		"data": {
+			"name": {
+				"ua": "Паста",
+				"en": "Pasta",
+				"pl": "Pasta",
+				"de": "Pasta",
+				"fr": "Pâtes"
+			}
+		}
+	},
+	{
+		"slug": "snacks",
+		"document": "itemCategory",
+		"data": {
+			"name": {
+				"ua": "Закуски",
+				"en": "Snacks",
+				"pl": "Przekąski",
+				"de": "Snacks",
+				"fr": "Snacks"
+			}
+		}
+	},
+	{
+		"slug": "wine",
+		"document": "itemCategory",
+		"data": {
+			"name": {
+				"ua": "Вино",
+				"en": "Wine",
+				"pl": "Wino",
+				"de": "Wein",
+				"fr": "Vin"
+			}
+		}
+	},
+	{
+		"slug": "beer",
+		"document": "itemCategory",
+		"data": {
+			"name": {
+				"ua": "Пиво",
+				"en": "Beer",
+				"pl": "Piwo",
+				"de": "Bier",
+				"fr": "Bière"
+			}
+		}
+	},
+	{
+		"slug": "california",
+		"document": "itemCategory",
+		"data": {
+			"name": {
+				"ua": "Каліфорнія",
+				"en": "California",
+				"pl": "Kalifornia",
+				"de": "Kalifornien",
+				"fr": "Californie"
+			}
+		}
+	},
+	{
+		"slug": "philadelphia",
+		"document": "itemCategory",
+		"data": {
+			"name": {
+				"ua": "Філадельфія",
+				"en": "Philadelphia",
+				"pl": "Filadelfia",
+				"de": "Philadelphia",
+				"fr": "Philadelphie"
+			}
+		}
+	},
+	{
+		"slug": "dragons",
+		"document": "itemCategory",
+		"data": {
+			"name": {
+				"ua": "Дракони",
+				"en": "Dragons",
+				"pl": "Smoki",
+				"de": "Drachen",
+				"fr": "Dragons"
+			}
+		}
+	},
+	{
+		"slug": "maki",
+		"document": "itemCategory",
+		"data": {
+			"name": {
+				"ua": "Макі",
+				"en": "Maki",
+				"pl": "Maki",
+				"de": "Maki",
+				"fr": "Maki"
 			}
 		}
 	}

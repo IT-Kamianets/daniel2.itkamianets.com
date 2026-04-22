@@ -11,7 +11,7 @@
 
 ## Context
 
-The repo is a single HoReCa website, but the guidance was repeated across multiple docs instead of being recorded as a durable decision. That made the repo direction clear in spirit but easy to drift in practice.
+The repo is a single Daniel website, but the guidance was repeated across multiple docs instead of being recorded as a durable decision. That made the repo direction clear in spirit but easy to drift in practice.
 
 ## Decision
 

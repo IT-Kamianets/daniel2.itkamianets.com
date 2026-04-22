@@ -12,9 +12,13 @@ import { provideTranslate } from '@wawjs/ngx-translate';
 import { routes } from './app.routes';
 import { BootstrapService } from './feature/bootstrap/bootstrap.service';
 import { LANGUAGES } from './feature/language/language.const';
+import { LanguageService } from './feature/language/language.service';
 
 const initializeBootstrapData = (bootstrapService: BootstrapService) => () =>
 	bootstrapService.initialize();
+
+const initializeLanguage = (languageService: LanguageService) => () =>
+	languageService.init();
 
 const availableLanguages = LANGUAGES.map(({ code, label }) => ({
 	code,
@@ -30,7 +34,7 @@ export const appConfig: ApplicationConfig = {
 		provideHttpClient(withFetch()),
 		provideClientHydration(withEventReplay()),
 		provideTranslate({
-			defaultLanguage: 'en',
+			defaultLanguage: 'ua',
 			languages: availableLanguages,
 			folder: '/i18n/',
 		}),
@@ -38,6 +42,12 @@ export const appConfig: ApplicationConfig = {
 			provide: APP_INITIALIZER,
 			useFactory: initializeBootstrapData,
 			deps: [BootstrapService],
+			multi: true,
+		},
+		{
+			provide: APP_INITIALIZER,
+			useFactory: initializeLanguage,
+			deps: [LanguageService],
 			multi: true,
 		},
 	],

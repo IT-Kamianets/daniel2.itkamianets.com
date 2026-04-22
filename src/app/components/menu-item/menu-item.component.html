@@ -19,7 +19,7 @@
 			</div>
 
 			<button
-				class="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-0 bg-transparent text-[var(--c-text-muted)] transition-colors duration-200 hover:text-[var(--c-secondary)]"
+				class="inline-flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center rounded-full border border-0 bg-transparent text-[var(--c-text-muted)] transition-colors duration-200 hover:text-[var(--c-secondary)]"
 				[attr.aria-label]="favoriteLabel()"
 				(click)="toggleFavorite()"
 				type="button"
@@ -27,9 +27,10 @@
 				<span
 					class="material-symbols-outlined"
 					[class.!text-[var(--c-secondary)]]="isFavorite()"
+					[class.variation-fill]="isFavorite()"
 					aria-hidden="true"
 				>
-					{{ isFavorite() ? 'favorite' : 'favorite_border' }}
+					favorite
 				</span>
 			</button>
 		</div>
@@ -66,7 +67,7 @@
 	>
 		<img
 			class="h-[5.9rem] w-full rounded-[0.75rem] object-cover transition-transform duration-200 hover:scale-[1.03] sm:h-[7.25rem]"
-			[src]="'/item/' + item().slug + '.webp'"
+			[src]="item().image"
 			[attr.alt]="item().imageAlt"
 			loading="lazy"
 		/>

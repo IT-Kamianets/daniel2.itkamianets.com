@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TranslateDirective } from '@wawjs/ngx-translate';
+import { TranslateDirective, TranslatePipe } from '@wawjs/ngx-translate';
 
 interface GalleryPhoto {
 	src: string;
@@ -7,17 +7,16 @@ interface GalleryPhoto {
 }
 
 @Component({
-	imports: [TranslateDirective],
+	imports: [TranslateDirective, TranslatePipe],
 	templateUrl: './gallery.component.html',
 	styleUrl: './gallery.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GalleryComponent {
-	protected readonly photos: GalleryPhoto[] = [
-		{ src: 'gallery/demo-1.webp', alt: 'Horeca bar service photo' },
-		{ src: 'gallery/demo-2.webp', alt: 'Horeca hotel reception photo' },
-		{ src: 'gallery/demo-3.webp', alt: 'Horeca hotel reception photo' },
-	];
+	protected readonly photos: GalleryPhoto[] = Array.from({ length: 30 }, (_, index) => ({
+		src: `/images/gallery/${index + 1}.jpg`,
+		alt: `Daniel gallery photo ${index + 1}`,
+	}));
 
 	protected readonly selectedPhoto = signal<GalleryPhoto | null>(null);
 
