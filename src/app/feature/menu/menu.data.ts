@@ -347,27 +347,27 @@ function _translateValue(value: LocalizedValue | null | undefined, language: Lan
 
 function _normalizeImage(image: string | undefined) {
 	if (!image) {
-		return '/images/logo/logo.png';
+		return 'images/logo/logo.png';
 	}
 
 	if (image.startsWith('http://') || image.startsWith('https://')) {
 		return image;
 	}
 
-	if (image.startsWith('/images/')) {
-		return image;
-	}
-
-	if (image.startsWith('images/')) {
-		return `/${image}`;
-	}
-	
 	if (image.includes('cdn-media.choiceqr.com')) {
 		return image.startsWith('//') ? `https:${image}` : image;
 	}
 
+	if (image.startsWith('/images/')) {
+		return image.substring(1);
+	}
+
+	if (image.startsWith('images/')) {
+		return image;
+	}
+
 	// Default to product folder if only filename or relative path
-	return `/images/product/${image.split('/').pop()}`;
+	return `images/product/${image.split('/').pop()}`;
 }
 
 export function translateMenuValue(

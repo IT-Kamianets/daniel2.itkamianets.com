@@ -14,7 +14,7 @@ interface GalleryPhoto {
 })
 export class GalleryComponent {
 	protected readonly photos: GalleryPhoto[] = Array.from({ length: 30 }, (_, index) => ({
-		src: `/images/gallery/${index + 1}.jpg`,
+		src: `images/gallery/${index + 1}.jpg`,
 		alt: `Daniel gallery photo ${index + 1}`,
 	}));
 

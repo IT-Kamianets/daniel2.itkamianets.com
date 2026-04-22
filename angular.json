@@ -50,12 +50,12 @@
 							{
 								"glob": "**/*",
 								"input": "public/images",
-								"output": "/images"
+								"output": "images"
 							},
 							{
 								"glob": "**/*",
 								"input": "src/i18n",
-								"output": "/i18n"
+								"output": "i18n"
 							},
 							"src/assets",
 							"src/favicon.ico"
